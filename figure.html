@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec4 vPosition;
+        attribute vec4 vColor;
+        varying vec4 fColor;
+    
+        void main() {
+            gl_Position = vPosition;
+            fColor = vColor;
+        }
+    </script>
+    
+    <!-- Fragment Shader -->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 fColor;
+    
+        void main() {
+            gl_FragColor = fColor;
+        }
+    </script>
+<head>
+    <meta charset="UTF-8">
+    <title>Octopus 3D Model</title>
+    <style>
+        .slider-group {
+            display: none;
+        }
+        .controls {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dropdown for selecting tentacles -->
+    <div class="controls">
+        <label for="tentacle-select">Select Tentacle:</label>
+        <select id="tentacle-select">
+            <option value="">--Choose a tentacle--</option>
+            <option value="1">Tentacle 1</option>
+            <option value="2">Tentacle 2</option>
+            <option value="3">Tentacle 3</option>
+            <option value="4">Tentacle 4</option>
+            <option value="5">Tentacle 5</option>
+            <option value="6">Tentacle 6</option>
+            <option value="7">Tentacle 7</option>
+            <option value="8">Tentacle 8</option>
+        </select>
+    </div>
+
+    <!-- Slider groups for each tentacle -->
+    <!-- Tentacle 1 -->
+    <div id="tentacle1" class="slider-group">
+        Tentacle 1 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 1 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 1 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle2" class="slider-group">
+        Tentacle 2 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 2 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 2 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle3" class="slider-group">
+        Tentacle 3 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 3 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 3 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle4" class="slider-group">
+        Tentacle 4 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 4 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 4 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle5" class="slider-group">
+        Tentacle 5 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 5 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 5 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle6" class="slider-group">
+        Tentacle 6 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 6 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 6 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle7" class="slider-group">
+        Tentacle 7 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 7 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 7 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+    <div id="tentacle8" class="slider-group">
+        Tentacle 8 Base (Shoulder) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 8 Middle (Elbow) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+        Tentacle 8 End (Wrist) angle -90 <input type="range" min="-90" max="90" step="10" value="0" />
+        90
+    </div>
+
+    <!-- WebGL Canvas -->
+    <canvas id="gl-canvas" width="512" height="512">
+        Oops ... your browser doesn't support the HTML5 canvas element.
+    </canvas>
+
+    <script type="text/javascript" src="Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="Common/initShaders.js"></script>
+    <script type="text/javascript" src="Common/MV.js"></script>
+    <script type="text/javascript" src="paint.js"></script>
+
+    <script>
+        // JavaScript for handling the dropdown menu and displaying sliders
+        document.getElementById('tentacle-select').addEventListener('change', function(event) {
+            // Hide all slider groups
+            var sliderGroups = document.querySelectorAll('.slider-group');
+            for (var i = 0; i < sliderGroups.length; i++) {
+                sliderGroups[i].style.display = 'none';
+            }
+
+            // Get the selected tentacle number and show its sliders
+            var tentacleNumber = event.target.value;
+            if (tentacleNumber) {
+                var selectedGroup = document.getElementById('tentacle' + tentacleNumber);
+                if (selectedGroup) {
+                    selectedGroup.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
