@@ -51,14 +51,14 @@ var modelViewMatrixLoc;
 var vBuffer, nBuffer;
 
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
+var lightAmbient = vec4(0.5, 0.2, 0.2, 1.0 );
 var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
 var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
 var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
-var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
+var materialDiffuse = vec4( 1.0, 0.2, 0.0, 1.0 );
 var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
-var materialShininess = 100.0;
+var materialShininess = 50.0;
 
 var ctm;
 var ambientColor, diffuseColor, specularColor;
@@ -263,7 +263,7 @@ function createLeg(legNumber, parent){
     var x = Math.sqrt(Math.pow(radius,2) - Math.pow(y,2));
 
     part1Parameters = {
-        'x': (x + parent.parameters['x']) * (legNumber > 4 ? -1 : 1) ,
+        'x': 0 ,
         'y': y + parent.parameters['y'],
         'z': parent.parameters['z'],
         'xLength': parent.parameters['xLength']/4,
@@ -570,12 +570,12 @@ var swim_animString =
 "root 1 10 "
  + "leg-6-1 1 -20,leg-6-2 1 -30,leg-6-3 1 -40,"+
 "leg-2-1 1 -20,leg-2-2 1 -30,leg-2-3 1 -40,"+
-"leg-4-1 1 90,leg-4-2 1 30,leg-4-3 1 -40,"+
+"leg-4-1 1 -20,leg-4-2 1 -30,leg-4-3 1 -40,"+
 "leg-8-1 1 -20,leg-8-2 1 -30,leg-8-3 1 -40,"+
-"leg-1-1 1 80,leg-1-2 1 40,leg-1-3 1 15,"+
+"leg-1-1 1 60,leg-1-2 1 40,leg-1-3 1 15,"+
 "leg-5-1 1 30,leg-5-2 1 30,leg-5-3 1 40,"+
 "leg-3-1 1 40,leg-3-2 1 30,leg-3-3 1 40,"+
-"leg-7-1 1 60,leg-7-2 1 30,leg-7-3 1 40,\n"+ 
+"leg-7-1 1 55,leg-7-2 1 30,leg-7-3 1 40,\n"+ 
 "root 1 -10 " + 
 "leg-6-1 0 0,leg-6-1 1 0,leg-6-2 1 0,leg-6-3 0 0,leg-6-3 1 0,"+
 "leg-2-1 0 0,leg-2-1 1 0,leg-2-2 1 0,leg-2-3 0 0,leg-2-3 1 0," + 
