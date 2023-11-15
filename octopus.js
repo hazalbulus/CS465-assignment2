@@ -14,14 +14,14 @@ initialParameters = {
 
 initialLegRotations = {
     'root': [90, 0, 90],
-    'leg-1-1': [105, 0, 0],
-    'leg-2-1': [105, 5, 0],
-    'leg-3-1': [105, 10, 0],
-    'leg-4-1': [105, 15, 0],
-    'leg-5-1': [105, 0, 0],
-    'leg-6-1': [105, -5, 0],
-    'leg-7-1': [105, -10, 0],
-    'leg-8-1': [105, -15, 0],
+    'leg-1-1': [90, 0, 0],
+    'leg-2-1': [90, 5, 0],
+    'leg-3-1': [90, 10, 0],
+    'leg-4-1': [90, 15, 0],
+    'leg-5-1': [90, 0, 0],
+    'leg-6-1': [90, -5, 0],
+    'leg-7-1': [90, -10, 0],
+    'leg-8-1': [90, -15, 0],
 
     'leg-1-2': [0, 0, 0],
     'leg-2-2': [0, 0, 0],
@@ -169,7 +169,20 @@ window.onload = function init() {
 
 
     initModel();
+    var danceCheckbox = document.getElementById("dance");
+    var swimCheckbox = document.getElementById("swim");
 
+    danceCheckbox.addEventListener('change', function() {
+        if(this.checked) {
+            swimCheckbox.checked = false;
+        }
+    });
+
+    swimCheckbox.addEventListener('change', function() {
+        if(this.checked) {
+            danceCheckbox.checked = false;
+        }
+    });
     var load_button = document.getElementById('load_button');
     load_button.addEventListener("click", function() {
         
@@ -273,7 +286,7 @@ function createLeg(legNumber, parent){
         'z': legpart1.parameters['z'] + legpart1.parameters['zLength']/2,
         'xLength': part1Parameters['xLength']*0.8,
         'yLength': part1Parameters['yLength']*0.8,
-        'zLength': part1Parameters['zLength']*1.25,
+        'zLength': part1Parameters['zLength']*1.5,
         'xRotation': initialLegRotations[part2name][0],
         'yRotation': initialLegRotations[part2name][1],
         'zRotation': initialLegRotations[part2name][2]
@@ -292,7 +305,7 @@ function createLeg(legNumber, parent){
         'z': legpart2.parameters['z'] + legpart2.parameters['zLength']/2,
         'xLength': part2Parameters['xLength']*0.8,
         'yLength': part2Parameters['yLength']*0.8,
-        'zLength': part2Parameters['zLength']*2,
+        'zLength': part2Parameters['zLength']*0.8,
         'xRotation': initialLegRotations[part3name][0],
         'yRotation': initialLegRotations[part3name][1],
         'zRotation': initialLegRotations[part3name][2]
@@ -344,9 +357,11 @@ var render = function() {
     modelViewMatrix = mat4();
     tree.traverseAndRender(tree.root, modelViewMatrix);
     
-    // if walk checkbox checked run walk if flag is true run loaded postures
-    if (document.getElementById('walk').checked) 
+    // if dance checkbox checked run dance if flag is true run loaded postures
+    if (document.getElementById('dance').checked) 
         renderAnimation(default_animString);
+    else if (document.getElementById('swim').checked) 
+        renderAnimation(swim_animString);
     else if (flag) {
         renderAnimation(allPostures);
     }
@@ -430,7 +445,7 @@ function drawSurface(node) {
 function createSphere(node) {
     let latitudeBands = 30;
     let longitudeBands = 30;
-    let radius = 1.5;
+    let radius = 1.25;
     let sphereVertexPosition = [];
     var newShpere = [];
     var newShepereNormals = [];
@@ -531,16 +546,16 @@ var time_limit = 75;
 var ready = true;
 var animationCounter = 0;
 
-// create walk animation for presentation
-var default_animString = "leg-6-1 0 -20,leg-6-1 1 20,leg-6-2 1 -40,leg-6-3 0 -25,leg-6-3 1 -20,"+
+// create dance animation for presentation
+var default_animString = "root 2 20 " + "leg-6-1 0 -20,leg-6-1 1 20,leg-6-2 1 -40,leg-6-3 0 -25,leg-6-3 1 -20,"+
                  "leg-2-1 0 -20,leg-2-1 1 -20,leg-2-2 1 40,leg-2-3 0 -25,leg-2-3 1 20,"+
                  "leg-4-1 0 -5,leg-4-2 0 -10,leg-4-3 0 -40,leg-4-3 1 -30,"+
                  "leg-8-1 0 -5,leg-8-2 0 -10,leg-8-3 0 -40,leg-8-3 1 30,"+
                  "leg-1-1 0 0,leg-1-2 0 0,leg-1-3 0 0,"+
                  "leg-5-1 0 0,leg-5-2 0 0,leg-5-3 0 0,"+
                  "leg-3-1 0 0,leg-3-2 0 0,leg-3-3 0 0,leg-3-3 1 0,"+
-                 "leg-7-1 0 0,leg-7-2 0 0,leg-7-3 0 0,leg-7-3 1 0,"+
-                 "lowerTorsoPart 2 0\n"+
+                 "leg-7-1 0 0,leg-7-2 0 0,leg-7-3 0 0,leg-7-3 1 0\n"+ 
+                 "root 0 -40 " + 
                  "leg-6-1 0 0,leg-6-1 1 0,leg-6-2 1 0,leg-6-3 0 0,leg-6-3 1 0,"+
                  "leg-2-1 0 0,leg-2-1 1 0,leg-2-2 1 0,leg-2-3 0 0,leg-2-3 1 0," + 
                  "leg-4-1 0 0,leg-4-2 0 0,leg-4-3 0 0,leg-4-3 1 0,"+
@@ -548,9 +563,29 @@ var default_animString = "leg-6-1 0 -20,leg-6-1 1 20,leg-6-2 1 -40,leg-6-3 0 -25
                  "leg-1-1 0 5,leg-1-2 0 -20,leg-1-3 0 40,"+
                  "leg-5-1 0 5,leg-5-2 0 -20,leg-5-3 0 40,"+
                  "leg-3-1 0 40,leg-3-2 0 -10,leg-3-3 0 -40,leg-3-3 1 -20,"+
-                 "leg-7-1 0 40,leg-7-2 0 -10,leg-7-3 0 -40,leg-7-3 1 20,"+
-                 "lowerTorsoPart 2 0";
-                 
+                 "leg-7-1 0 40,leg-7-2 0 -10,leg-7-3 0 -40,leg-7-3 1 20," + "root 2 0";
+
+// create swim animation
+var swim_animString = 
+"root 1 10 "
+ + "leg-6-1 1 -20,leg-6-2 1 -30,leg-6-3 1 -40,"+
+"leg-2-1 1 -20,leg-2-2 1 -30,leg-2-3 1 -40,"+
+"leg-4-1 1 90,leg-4-2 1 30,leg-4-3 1 -40,"+
+"leg-8-1 1 -20,leg-8-2 1 -30,leg-8-3 1 -40,"+
+"leg-1-1 1 80,leg-1-2 1 40,leg-1-3 1 15,"+
+"leg-5-1 1 30,leg-5-2 1 30,leg-5-3 1 40,"+
+"leg-3-1 1 40,leg-3-2 1 30,leg-3-3 1 40,"+
+"leg-7-1 1 60,leg-7-2 1 30,leg-7-3 1 40,\n"+ 
+"root 1 -10 " + 
+"leg-6-1 0 0,leg-6-1 1 0,leg-6-2 1 0,leg-6-3 0 0,leg-6-3 1 0,"+
+"leg-2-1 0 0,leg-2-1 1 0,leg-2-2 1 0,leg-2-3 0 0,leg-2-3 1 0," + 
+"leg-4-1 0 0,leg-4-2 0 0,leg-4-3 0 0,leg-4-3 1 0,"+
+"leg-8-1 0 0,leg-8-2 0 0,leg-8-3 0 0,leg-8-3 1 0,"+
+"leg-1-1 0 5,leg-1-2 0 -20,leg-1-3 0 40,"+
+"leg-5-1 0 5,leg-5-2 0 -20,leg-5-3 0 40,"+
+"leg-3-1 0 40,leg-3-2 0 -10,leg-3-3 0 -40,leg-3-3 1 -20,"+
+"leg-7-1 0 40,leg-7-2 0 -10,leg-7-3 0 -40,leg-7-3 1 20," + "root 2 0";
+
 
 // render function for creating animation effect
 function renderAnimation(animString) {
@@ -562,11 +597,18 @@ function renderAnimation(animString) {
 
         animationCounter++;
 
+  
+        // Reset the animationCounter based on the active animation type
         if (animationCounter > animFile.length - 1) {
-            if (document.getElementById("repeat").checked)
+            if (document.getElementById("repeat").checked) {
                 animationCounter = 0;
-            if (document.getElementById("walk").checked)
+            } else if (document.getElementById("dance").checked) {
                 animationCounter = 0;
+                animString = default_animString; // Reset to dance animation
+            } else if (document.getElementById("swim").checked) {
+                animationCounter = 0;
+                animString = swim_animString; // Change to swim animation
+            }
         }
     }
 }
