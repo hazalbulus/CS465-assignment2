@@ -848,7 +848,7 @@ function createSurface(node) {
 }
 
 // create animation parameters
-var fps = 30;
+var fps = 60;
 var time_limit = 75;
 var ready = true;
 var animationCounter = 0;
@@ -878,6 +878,7 @@ var default_animString =
 // create swim animation
 var swim_animString =
   // Move legs upwards
+  "root 1 -3 " +
   "leg-1-1 0 -25,leg-1-2 0 -50 -10,leg-1-3 0 -75," + // Front-left leg
   "leg-1-1 1 -25,leg-1-2 1 -50 -10,leg-1-3 1 -75," + // Front-left leg
   "leg-1-1 2 -25,leg-1-2 2 -50 -10,leg-1-3 2 -75," + // Front-left leg
@@ -902,7 +903,10 @@ var swim_animString =
 
   "leg-8-1 1 -25,leg-8-2 1 -50,leg-8-3 1 -75\n" + // Mid-back-left leg
 
+
   // Move legs downwards
+  "root 1 3 " +
+
   "leg-1-1 0 10,leg-1-2 0 10,leg-1-3 0 10," + // Front-left leg
   "leg-1-1 1 10,leg-1-2 1 10,leg-1-3 1 10," + // Front-left leg
   "leg-1-1 2 10,leg-1-2 2 10,leg-1-3 2 10," + // Front-left leg
@@ -926,6 +930,8 @@ var swim_animString =
   "leg-7-1 0 -10,leg-7-2 0 -10,leg-7-3 0 -10," + // Mid-back-right leg
 
   "leg-8-1 1 10,leg-8-2 1 10,leg-8-3 1 10"; // Mid-back-left leg
+
+  "root 2 0";
 
 // render function for creating animation effect
 function renderAnimation(animString) {
@@ -989,9 +995,9 @@ function generateAnimationString(animLine) {
 }
 
 // according to given animationCommand, it applys given degrees to given parts.
+// according to given animationCommand, it applies given degrees or translations to given parts.
 function runAnimation(animationCommand) {
   var j = 0;
-
   var animationList = animationCommand.split("\n");
 
   function animate() {
@@ -1000,24 +1006,32 @@ function runAnimation(animationCommand) {
 
       for (var k = 0; k < commands.length; k++) {
         var command = commands[k].split(" ");
+        var nodeName = command[0];
+        var actionType = parseInt(command[1]); // 0, 1, or 2 for x, y, z rotation; 1 for y translation
+        var value = parseFloat(command[2]);
 
-        var executionBodyPart = command[0];
-        var executionDirection = parseFloat(command[1]);
-        var executionAngle = parseFloat(command[2]);
-        if (tree.nodes[executionBodyPart] != undefined)
-          tree.nodes[executionBodyPart].rotations[executionDirection] +=
-            executionAngle;
+        if (tree.nodes[nodeName] != undefined) {
+          if (nodeName === "root") {
+            // Apply translation to y
+            tree.nodes[nodeName].translate[actionType] += value;
+          } else {
+            // Apply rotation
+            tree.nodes[nodeName].rotations[actionType] += value;
+          }
+        }
       }
 
       j++;
 
       if (j < animationList.length) animate();
       else ready = true;
+
     }, 1000 / time_limit);
   }
 
   animate();
 }
+
 
 var allPostures = "";
 var currentPostureString = "";
