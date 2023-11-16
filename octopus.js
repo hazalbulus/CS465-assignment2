@@ -401,7 +401,7 @@ var flag = 0;
 // function to constantly call re-rendering for canvas
 var render = function () {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.clearColor(1, 0.2, 1, 0.7);
+  gl.clearColor(0.1, 0.1, 1, 0.7);
 
   // hierarchically apply transform to all nodes
   tree.updateTransformToSubtree(tree.root, applyTransform);
