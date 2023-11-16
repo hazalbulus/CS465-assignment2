@@ -878,7 +878,7 @@ var default_animString =
 // create swim animation
 var swim_animString =
   // Move legs upwards
-  "root 1 -3 " +
+  "root 1 10 " +
   "leg-1-1 0 -25,leg-1-2 0 -50 -10,leg-1-3 0 -75," + // Front-left leg
   "leg-1-1 1 -25,leg-1-2 1 -50 -10,leg-1-3 1 -75," + // Front-left leg
   "leg-1-1 2 -25,leg-1-2 2 -50 -10,leg-1-3 2 -75," + // Front-left leg
@@ -905,7 +905,7 @@ var swim_animString =
 
 
   // Move legs downwards
-  "root 1 3 " +
+  "root 1 -10 " +
 
   "leg-1-1 0 10,leg-1-2 0 10,leg-1-3 0 10," + // Front-left leg
   "leg-1-1 1 10,leg-1-2 1 10,leg-1-3 1 10," + // Front-left leg
@@ -995,9 +995,9 @@ function generateAnimationString(animLine) {
 }
 
 // according to given animationCommand, it applys given degrees to given parts.
-// according to given animationCommand, it applies given degrees or translations to given parts.
 function runAnimation(animationCommand) {
   var j = 0;
+
   var animationList = animationCommand.split("\n");
 
   function animate() {
@@ -1006,32 +1006,24 @@ function runAnimation(animationCommand) {
 
       for (var k = 0; k < commands.length; k++) {
         var command = commands[k].split(" ");
-        var nodeName = command[0];
-        var actionType = parseInt(command[1]); // 0, 1, or 2 for x, y, z rotation; 1 for y translation
-        var value = parseFloat(command[2]);
 
-        if (tree.nodes[nodeName] != undefined) {
-          if (nodeName === "root") {
-            // Apply translation to y
-            tree.nodes[nodeName].translate[actionType] += value;
-          } else {
-            // Apply rotation
-            tree.nodes[nodeName].rotations[actionType] += value;
-          }
-        }
+        var executionBodyPart = command[0];
+        var executionDirection = parseFloat(command[1]);
+        var executionAngle = parseFloat(command[2]);
+        if (tree.nodes[executionBodyPart] != undefined)
+          tree.nodes[executionBodyPart].rotations[executionDirection] +=
+            executionAngle;
       }
 
       j++;
 
       if (j < animationList.length) animate();
       else ready = true;
-
     }, 1000 / time_limit);
   }
 
   animate();
 }
-
 
 var allPostures = "";
 var currentPostureString = "";
