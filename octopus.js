@@ -257,6 +257,7 @@ function initModel() {
     drawRectangularPrism
   );
   createRectangularPrism(rootNode); // Create the head of the octopus
+  createEyes(rootNode); // Add eyes to the head
   tree = new Tree(rootNode);
 
   // Calculate corner and midpoint positions for the tentacles
@@ -301,7 +302,84 @@ function initModel() {
     var midpointLeg = createLeg(i + 5, rootNode, midpointPositions[i]);
     rootNode.addChild(midpointLeg);
   }
+
 }
+
+function createEyes(node) {
+  var eyeRadius = 1000; // adjust the size of the eye
+  var latitudeBands = 30;
+  var longitudeBands = 30;
+  var leftEyeVertices = [];
+  var rightEyeVertices = [];
+  var normals = [];
+
+  // Create left eye
+  var leftEyePosition = vec3(-node.parameters.xLength / 4, node.parameters.yLength / 2, node.parameters.zLength / 2);
+  var rightEyePosition = vec3(node.parameters.xLength / 4, node.parameters.yLength / 2, node.parameters.zLength / 2);
+
+  for (let latNumber = 0; latNumber <= latitudeBands; ++latNumber) {
+    let theta = (latNumber * Math.PI) / latitudeBands;
+    let sinTheta = Math.sin(theta);
+    let cosTheta = Math.cos(theta);
+
+    for (let longNumber = 0; longNumber <= longitudeBands; ++longNumber) {
+      let phi = (longNumber * 2 * Math.PI) / longitudeBands;
+      let sinPhi = Math.sin(phi);
+      let cosPhi = Math.cos(phi);
+
+      let x = cosPhi * sinTheta;
+      let y = cosTheta;
+      let z = sinPhi * sinTheta;
+
+      // Left eye vertices
+      leftEyeVertices.push(vec4(
+        leftEyePosition[0] + eyeRadius * x,
+        leftEyePosition[1] + eyeRadius * y,
+        leftEyePosition[2] + eyeRadius * z,
+        1.0
+      ));
+
+      // Right eye vertices
+      rightEyeVertices.push(vec4(
+        rightEyePosition[0] + eyeRadius * x,
+        rightEyePosition[1] + eyeRadius * y,
+        rightEyePosition[2] + eyeRadius * z,
+        1.0
+      ));
+
+      // Normals for the vertices
+      var normal = vec3(x, y, z);
+      normals.push(vec4(normal, 0.0));
+    }
+  }
+
+  // Create the left eye node
+  var leftEyeNode = new Node("leftEye", node, {
+    xLength: eyeRadius,
+    yLength: eyeRadius,
+    zLength: eyeRadius,
+    color: [1.0, 1.0, 1.0, 1.0] // White color
+  }, drawSphere);
+
+  leftEyeNode.vertices = leftEyeVertices;
+  leftEyeNode.normals = normals;
+
+  // Create the right eye node
+  var rightEyeNode = new Node("rightEye", node, {
+    xLength: eyeRadius,
+    yLength: eyeRadius,
+    zLength: eyeRadius,
+    color: [1.0, 1.0, 1.0, 1.0] // White color
+  }, drawSphere);
+
+  rightEyeNode.vertices = rightEyeVertices;
+  rightEyeNode.normals = normals;
+
+  // Add the eyes as children of the head node
+  node.addChild(leftEyeNode);
+  node.addChild(rightEyeNode);
+}
+
 
 // function to create leg models
 function createLeg(legNumber, parent, position) {
@@ -882,56 +960,39 @@ var swim_animString =
   "leg-1-1 0 -25,leg-1-2 0 -50 -10,leg-1-3 0 -75," + // Front-left leg
   "leg-1-1 1 -25,leg-1-2 1 -50 -10,leg-1-3 1 -75," + // Front-left leg
   "leg-1-1 2 -25,leg-1-2 2 -50 -10,leg-1-3 2 -75," + // Front-left leg
-
   "leg-2-1 0 -25,leg-2-2 0 -50,leg-2-3 0 -75," + // Front-right leg
   "leg-2-1 1 25,leg-2-2 1 50,leg-2-3 1 75," + // Front-right leg
   "leg-2-1 2 25,leg-2-2 2 50,leg-2-3 2 75," + // Front-right leg
-
   "leg-3-1 0 25,leg-3-2 0 50,leg-3-3 0 75," + // Back-right leg
   "leg-3-1 1 25,leg-3-2 1 50,leg-3-3 1 75," + // Back-right leg
   "leg-3-1 2 25,leg-3-2 2 50,leg-3-3 2 75," + // Back-right leg
-
   "leg-4-1 0 25,leg-4-2 0 50,leg-4-3 0 75," + // Back-left leg
   "leg-4-1 1 -25,leg-4-2 1 -25,leg-4-3 1 -75," + // Back-left leg
   "leg-4-1 2 -25,leg-4-2 2 -25,leg-4-3 2 -75," + // Back-left leg
-
   "leg-5-1 0 -25,leg-5-2 0 -50,leg-5-3 0 -75," + // Mid-front-left leg
-
   "leg-6-1 1 25,leg-6-2 1 50,leg-6-3 1 75," + // Mid-front-right leg
-
   "leg-7-1 0 25,leg-7-2 0 50,leg-7-3 0 75," + // Mid-back-right leg
-
   "leg-8-1 1 -25,leg-8-2 1 -50,leg-8-3 1 -75\n" + // Mid-back-left leg
-
-
   // Move legs downwards
   "root 1 -10 " +
-
   "leg-1-1 0 10,leg-1-2 0 10,leg-1-3 0 10," + // Front-left leg
   "leg-1-1 1 10,leg-1-2 1 10,leg-1-3 1 10," + // Front-left leg
   "leg-1-1 2 10,leg-1-2 2 10,leg-1-3 2 10," + // Front-left leg
-
   "leg-2-1 0 10,leg-2-2 0 10,leg-2-3 0 10," + // Front-right leg
   "leg-2-1 1 -10,leg-2-2 1 -10,leg-2-3 1 -10," + // Front-right leg
   "leg-2-1 2 -10,leg-2-2 -2 -10,leg-2-3 2 -10," + // Front-right leg
-
   "leg-3-1 0 -10,leg-3-2 0 -10,leg-3-3 0 -10," + // Back-right leg
   "leg-3-1 1 -10,leg-3-2 1 -10,leg-3-3 1 -10," + // Back-right leg
   "leg-3-1 2 -10,leg-3-2 2 -10,leg-3-3 2 -10," + // Back-right leg
-
   "leg-4-1 0 -10,leg-4-2 0 -10,leg-4-3 0 -10," + // Back-left leg
   "leg-4-1 1 10,leg-4-2 1 10,leg-4-3 1 10," + // Back-left leg
   "leg-4-1 2 10,leg-4-2 2 10,leg-4-3 2 10," + // Back-left leg
-
   "leg-5-1 0 10,leg-5-2 0 10,leg-5-3 0 10," + // Mid-front-left leg
-
   "leg-6-1 1 -10,leg-6-2 1 -10,leg-6-3 1 -10," + // Mid-front-right leg
-
   "leg-7-1 0 -10,leg-7-2 0 -10,leg-7-3 0 -10," + // Mid-back-right leg
-
   "leg-8-1 1 10,leg-8-2 1 10,leg-8-3 1 10"; // Mid-back-left leg
 
-  "root 2 0";
+("root 2 0");
 
 // render function for creating animation effect
 function renderAnimation(animString) {
@@ -1000,29 +1061,38 @@ function runAnimation(animationCommand) {
 
   var animationList = animationCommand.split("\n");
 
+  // Replace setTimeout with requestAnimationFrame for smoother and more optimized animations
   function animate() {
-    setTimeout(function () {
+    if (j < animationList.length) {
       var commands = animationList[j].split(",");
 
       for (var k = 0; k < commands.length; k++) {
         var command = commands[k].split(" ");
-
         var executionBodyPart = command[0];
         var executionDirection = parseFloat(command[1]);
-        var executionAngle = parseFloat(command[2]);
-        if (tree.nodes[executionBodyPart] != undefined)
+        var executionValue = parseFloat(command[2]);
+        if (tree.nodes[executionBodyPart] != undefined) {
+          // Apply rotation
           tree.nodes[executionBodyPart].rotations[executionDirection] +=
-            executionAngle;
+            executionValue;
+        }
       }
 
       j++;
-
-      if (j < animationList.length) animate();
-      else ready = true;
-    }, 1000 / time_limit);
+      requestAnimationFrame(animate);
+    } else {
+      ready = true;
+    }
   }
 
-  animate();
+  // Call this function to start the animation loop
+  function startAnimationLoop() {
+    j = 0;
+    requestAnimationFrame(animate);
+  }
+
+  // Start animation loop instead of calling animate directly
+  startAnimationLoop();
 }
 
 var allPostures = "";
