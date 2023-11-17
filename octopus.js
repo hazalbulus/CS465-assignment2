@@ -302,7 +302,6 @@ function initModel() {
     var midpointLeg = createLeg(i + 5, rootNode, midpointPositions[i]);
     rootNode.addChild(midpointLeg);
   }
-
 }
 
 function createEyes(node) {
@@ -314,8 +313,16 @@ function createEyes(node) {
   var normals = [];
 
   // Create left eye
-  var leftEyePosition = vec3(-node.parameters.xLength / 4, node.parameters.yLength / 2, node.parameters.zLength / 2);
-  var rightEyePosition = vec3(node.parameters.xLength / 4, node.parameters.yLength / 2, node.parameters.zLength / 2);
+  var leftEyePosition = vec3(
+    -node.parameters.xLength / 4,
+    node.parameters.yLength / 2,
+    node.parameters.zLength / 2
+  );
+  var rightEyePosition = vec3(
+    node.parameters.xLength / 4,
+    node.parameters.yLength / 2,
+    node.parameters.zLength / 2
+  );
 
   for (let latNumber = 0; latNumber <= latitudeBands; ++latNumber) {
     let theta = (latNumber * Math.PI) / latitudeBands;
@@ -332,20 +339,24 @@ function createEyes(node) {
       let z = sinPhi * sinTheta;
 
       // Left eye vertices
-      leftEyeVertices.push(vec4(
-        leftEyePosition[0] + eyeRadius * x,
-        leftEyePosition[1] + eyeRadius * y,
-        leftEyePosition[2] + eyeRadius * z,
-        1.0
-      ));
+      leftEyeVertices.push(
+        vec4(
+          leftEyePosition[0] + eyeRadius * x,
+          leftEyePosition[1] + eyeRadius * y,
+          leftEyePosition[2] + eyeRadius * z,
+          1.0
+        )
+      );
 
       // Right eye vertices
-      rightEyeVertices.push(vec4(
-        rightEyePosition[0] + eyeRadius * x,
-        rightEyePosition[1] + eyeRadius * y,
-        rightEyePosition[2] + eyeRadius * z,
-        1.0
-      ));
+      rightEyeVertices.push(
+        vec4(
+          rightEyePosition[0] + eyeRadius * x,
+          rightEyePosition[1] + eyeRadius * y,
+          rightEyePosition[2] + eyeRadius * z,
+          1.0
+        )
+      );
 
       // Normals for the vertices
       var normal = vec3(x, y, z);
@@ -354,23 +365,33 @@ function createEyes(node) {
   }
 
   // Create the left eye node
-  var leftEyeNode = new Node("leftEye", node, {
-    xLength: eyeRadius,
-    yLength: eyeRadius,
-    zLength: eyeRadius,
-    color: [1.0, 1.0, 1.0, 1.0] // White color
-  }, drawSphere);
+  var leftEyeNode = new Node(
+    "leftEye",
+    node,
+    {
+      xLength: eyeRadius,
+      yLength: eyeRadius,
+      zLength: eyeRadius,
+      color: [1.0, 1.0, 1.0, 1.0], // White color
+    },
+    drawSphere
+  );
 
   leftEyeNode.vertices = leftEyeVertices;
   leftEyeNode.normals = normals;
 
   // Create the right eye node
-  var rightEyeNode = new Node("rightEye", node, {
-    xLength: eyeRadius,
-    yLength: eyeRadius,
-    zLength: eyeRadius,
-    color: [1.0, 1.0, 1.0, 1.0] // White color
-  }, drawSphere);
+  var rightEyeNode = new Node(
+    "rightEye",
+    node,
+    {
+      xLength: eyeRadius,
+      yLength: eyeRadius,
+      zLength: eyeRadius,
+      color: [1.0, 1.0, 1.0, 1.0], // White color
+    },
+    drawSphere
+  );
 
   rightEyeNode.vertices = rightEyeVertices;
   rightEyeNode.normals = normals;
@@ -379,7 +400,6 @@ function createEyes(node) {
   node.addChild(leftEyeNode);
   node.addChild(rightEyeNode);
 }
-
 
 // function to create leg models
 function createLeg(legNumber, parent, position) {
@@ -479,7 +499,7 @@ var flag = 0;
 // function to constantly call re-rendering for canvas
 var render = function () {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.clearColor(0.1, 0.1, 1, 0.7);
+  gl.clearColor(0, 0, 0, 0);
 
   // hierarchically apply transform to all nodes
   tree.updateTransformToSubtree(tree.root, applyTransform);
@@ -933,63 +953,105 @@ var animationCounter = 0;
 
 // create dance animation for presentation
 var default_animString =
-  "root 2 20 " +
-  "leg-6-1 0 -20,leg-6-1 1 20,leg-6-2 1 -40,leg-6-3 0 -25,leg-6-3 1 -20," +
-  "leg-2-1 0 -20,leg-2-1 1 -20,leg-2-2 1 40,leg-2-3 0 -25,leg-2-3 1 20," +
-  "leg-4-1 0 -5,leg-4-2 0 -10,leg-4-3 0 -40,leg-4-3 1 -30," +
-  "leg-8-1 0 -5,leg-8-2 0 -10,leg-8-3 0 -40,leg-8-3 1 30," +
-  "leg-1-1 0 0,leg-1-2 0 0,leg-1-3 0 0," +
-  "leg-5-1 0 0,leg-5-2 0 0,leg-5-3 0 0," +
-  "leg-3-1 0 0,leg-3-2 0 0,leg-3-3 0 0,leg-3-3 1 0," +
-  "leg-7-1 0 0,leg-7-2 0 0,leg-7-3 0 0,leg-7-3 1 0\n" +
-  "root 0 -40 " +
-  "leg-6-1 0 0,leg-6-1 1 0,leg-6-2 1 0,leg-6-3 0 0,leg-6-3 1 0," +
-  "leg-2-1 0 0,leg-2-1 1 0,leg-2-2 1 0,leg-2-3 0 0,leg-2-3 1 0," +
-  "leg-4-1 0 0,leg-4-2 0 0,leg-4-3 0 0,leg-4-3 1 0," +
-  "leg-8-1 0 0,leg-8-2 0 0,leg-8-3 0 0,leg-8-3 1 0," +
-  "leg-1-1 0 5,leg-1-2 0 -20,leg-1-3 0 40," +
-  "leg-5-1 0 5,leg-5-2 0 -20,leg-5-3 0 40," +
-  "leg-3-1 0 40,leg-3-2 0 -10,leg-3-3 0 -40,leg-3-3 1 -20," +
-  "leg-7-1 0 40,leg-7-2 0 -10,leg-7-3 0 -40,leg-7-3 1 20," +
+  // Set initial pose: tentacles spread out like helicopter blades
+  "root 2 180\n" +
+
+  "leg-1-1 0 -25,leg-1-2 0 50 -10,leg-1-3 0 75," + // Front-left leg
+  "leg-1-1 1 -25,leg-1-2 1 50 -10,leg-1-3 1 75," + // Front-left leg
+
+  "leg-2-1 0 -25,leg-2-2 0 50,leg-2-3 0 75," + // Front-right leg
+  "leg-2-1 1 25,leg-2-2 1 -50,leg-2-3 1 -75," + // Front-right leg
+
+  "leg-3-1 0 25,leg-3-2 0 -50,leg-3-3 0 -75," + // Back-right leg
+  "leg-3-1 1 25,leg-3-2 1 -50,leg-3-3 1 -75," + // Back-right leg
+
+  "leg-4-1 0 25,leg-4-2 0 -50,leg-4-3 0 -75," + // Back-left leg
+  "leg-4-1 1 -25,leg-4-2 1 50,leg-4-3 1 75," + // Back-left leg
+
+  "leg-5-1 0 -25,leg-5-2 0 50,leg-5-3 0 75," + // Mid-front-left leg
+
+  "leg-6-1 1 25,leg-6-2 1 -50,leg-6-3 1 -75," + // Mid-front-right leg
+
+  "leg-7-1 0 25,leg-7-2 0 -50,leg-7-3 0 -75," + // Mid-back-right leg
+
+  "leg-8-1 1 -25,leg-8-2 1 50,leg-8-3 1 75\n" + // Mid-back-left leg
+
+  // Spin the octopus
+  "root 1 360\n" +
+
+  "root 1 -360\n" +
+
+  // Reset pose
+  "root 2 -180 " +
+
+  "leg-1-1 0 0,leg-1-2 0 0,leg-1-3 0 0," + // Front-left leg
+  "leg-1-1 1 0,leg-1-2 1 0,leg-1-3 1 0," + // Front-left leg
+
+  "leg-2-1 0 0,leg-2-2 0 0,leg-2-3 0 0," + // Front-right leg
+  "leg-2-1 1 0,leg-2-2 1 0,leg-2-3 1 0," + // Front-right leg
+
+  "leg-3-1 0 0,leg-3-2 0 0,leg-3-3 0 0," + // Back-right leg
+  "leg-3-1 1 0,leg-3-2 1 0,leg-3-3 1 0," + // Back-right leg
+
+  "leg-4-1 0 0,leg-4-2 0 0,leg-4-3 0 0," + // Back-left leg
+  "leg-4-1 1 0,leg-4-2 1 0,leg-4-3 1 0," + // Back-left leg
+
+  "leg-5-1 0 0,leg-5-2 0 0,leg-5-3 0 0," + // Mid-front-left leg
+
+  "leg-6-1 1 0,leg-6-2 1 0,leg-6-3 1 0," + // Mid-front-right leg
+
+  "leg-7-1 0 0,leg-7-2 0 0,leg-7-3 0 0," + // Mid-back-right leg
+
+  "leg-8-1 1 0,leg-8-2 1 0,leg-8-3 1 0\n" +// Mid-back-left leg
+
   "root 2 0";
+  
 
 // create swim animation
 var swim_animString =
   // Move legs upwards
   "root 1 10 " +
-  "leg-1-1 0 -25,leg-1-2 0 -50 -10,leg-1-3 0 -75," + // Front-left leg
-  "leg-1-1 1 -25,leg-1-2 1 -50 -10,leg-1-3 1 -75," + // Front-left leg
-  "leg-1-1 2 -25,leg-1-2 2 -50 -10,leg-1-3 2 -75," + // Front-left leg
+  
+  "leg-1-1 0 -25,leg-1-2 0 -50,leg-1-3 0 -75," + // Front-left leg
+  "leg-1-1 1 -25,leg-1-2 1 -50,leg-1-3 1 -75," + // Front-left leg
+
   "leg-2-1 0 -25,leg-2-2 0 -50,leg-2-3 0 -75," + // Front-right leg
   "leg-2-1 1 25,leg-2-2 1 50,leg-2-3 1 75," + // Front-right leg
-  "leg-2-1 2 25,leg-2-2 2 50,leg-2-3 2 75," + // Front-right leg
+
   "leg-3-1 0 25,leg-3-2 0 50,leg-3-3 0 75," + // Back-right leg
   "leg-3-1 1 25,leg-3-2 1 50,leg-3-3 1 75," + // Back-right leg
-  "leg-3-1 2 25,leg-3-2 2 50,leg-3-3 2 75," + // Back-right leg
+
   "leg-4-1 0 25,leg-4-2 0 50,leg-4-3 0 75," + // Back-left leg
-  "leg-4-1 1 -25,leg-4-2 1 -25,leg-4-3 1 -75," + // Back-left leg
-  "leg-4-1 2 -25,leg-4-2 2 -25,leg-4-3 2 -75," + // Back-left leg
+  "leg-4-1 1 -25,leg-4-2 1 -50,leg-4-3 1 -75," + // Back-left leg
+
   "leg-5-1 0 -25,leg-5-2 0 -50,leg-5-3 0 -75," + // Mid-front-left leg
+
   "leg-6-1 1 25,leg-6-2 1 50,leg-6-3 1 75," + // Mid-front-right leg
+
   "leg-7-1 0 25,leg-7-2 0 50,leg-7-3 0 75," + // Mid-back-right leg
+
   "leg-8-1 1 -25,leg-8-2 1 -50,leg-8-3 1 -75\n" + // Mid-back-left leg
   // Move legs downwards
   "root 1 -10 " +
+
   "leg-1-1 0 10,leg-1-2 0 10,leg-1-3 0 10," + // Front-left leg
   "leg-1-1 1 10,leg-1-2 1 10,leg-1-3 1 10," + // Front-left leg
-  "leg-1-1 2 10,leg-1-2 2 10,leg-1-3 2 10," + // Front-left leg
+
   "leg-2-1 0 10,leg-2-2 0 10,leg-2-3 0 10," + // Front-right leg
   "leg-2-1 1 -10,leg-2-2 1 -10,leg-2-3 1 -10," + // Front-right leg
-  "leg-2-1 2 -10,leg-2-2 -2 -10,leg-2-3 2 -10," + // Front-right leg
+
   "leg-3-1 0 -10,leg-3-2 0 -10,leg-3-3 0 -10," + // Back-right leg
   "leg-3-1 1 -10,leg-3-2 1 -10,leg-3-3 1 -10," + // Back-right leg
-  "leg-3-1 2 -10,leg-3-2 2 -10,leg-3-3 2 -10," + // Back-right leg
+
   "leg-4-1 0 -10,leg-4-2 0 -10,leg-4-3 0 -10," + // Back-left leg
   "leg-4-1 1 10,leg-4-2 1 10,leg-4-3 1 10," + // Back-left leg
-  "leg-4-1 2 10,leg-4-2 2 10,leg-4-3 2 10," + // Back-left leg
+
   "leg-5-1 0 10,leg-5-2 0 10,leg-5-3 0 10," + // Mid-front-left leg
+
   "leg-6-1 1 -10,leg-6-2 1 -10,leg-6-3 1 -10," + // Mid-front-right leg
+
   "leg-7-1 0 -10,leg-7-2 0 -10,leg-7-3 0 -10," + // Mid-back-right leg
+
   "leg-8-1 1 10,leg-8-2 1 10,leg-8-3 1 10"; // Mid-back-left leg
 
 ("root 2 0");

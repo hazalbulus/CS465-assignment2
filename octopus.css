@@ -1,22 +1,22 @@
-#gl-canvas{
-	display: flex;
-	border: 2px solid;
-	margin: auto;
+#gl-canvas {
+  background-image: url("ocean.png");
+  background-size: cover; /* Cover the entire canvas */
+  background-repeat: no-repeat;
 }
 
-.container{
-	font-size: 11px;
+.container {
+  font-size: 11px;
 }
 .blue-button {
-    background-color: blue;
-    color: white; /* This makes the text on the button white */
+  background-color: blue;
+  color: white; /* This makes the text on the button white */
 }
 
 .red-button {
-    background-color: red;
-    color: white; /* This makes the text on the button white */
+  background-color: red;
+  color: white; /* This makes the text on the button white */
 }
 .green-button {
-    background-color: rgb(0, 157, 3);
-    color: white; /* This makes the text on the button white */
+  background-color: rgb(0, 157, 3);
+  color: white; /* This makes the text on the button white */
 }
